@@ -37,13 +37,13 @@ function App() {
       link.click();
 
     } catch (error) {
-      console.error(error);
-      alert("Error occurred ❌");
-    }
+  console.error(error);
+  alert("Error occurred ❌");
+}
 
-    setLoading(false);
-  };
-
+setLoading(false);
+};
+    
   return (
     <div style={{ textAlign: "center", marginTop: "80px" }}>
       <h1>YouTube Downloader 🎬</h1>
