@@ -15,29 +15,51 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await fetch("https://youtube-download-iczp.onrender.com/download", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ url, quality, type })
-      });
+      const response = await fetch(
+        "https://youtube-download-iczp.onrender.com/download",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            url,
+            quality,
+            type,
+          }),
+        }
+      );
 
       if (!response.ok) {
-        alert("Download failed ❌");
+        const errorText = await response.text();
+        console.log("Backend Error:", errorText);
+
+        alert("Backend error ❌");
         setLoading(false);
         return;
       }
 
       const blob = await response.blob();
 
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "video.mp4";
-      link.click();
+      const downloadUrl = window.URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+
+      if (type === "mp3") {
+        a.download = "audio.mp3";
+      } else {
+        a.download = "video.mp4";
+      }
+
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      window.URL.revokeObjectURL(downloadUrl);
 
     } catch (error) {
-      console.error(error);
+      console.error("Fetch Error:", error);
       alert("Error occurred ❌");
     }
 
@@ -45,7 +67,13 @@ function App() {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "80px" }}>
+    <div
+      style={{
+        textAlign: "center",
+        marginTop: "80px",
+        color: "white",
+      }}
+    >
       <h1>YouTube Downloader 🎬</h1>
 
       <input
@@ -53,28 +81,57 @@ function App() {
         placeholder="Paste YouTube URL"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
-        style={{ padding: "10px", width: "300px" }}
+        style={{
+          padding: "10px",
+          width: "320px",
+          borderRadius: "5px",
+        }}
       />
 
-      <br /><br />
+      <br />
+      <br />
 
-      <select value={quality} onChange={(e) => setQuality(e.target.value)}>
+      <select
+        value={quality}
+        onChange={(e) => setQuality(e.target.value)}
+        style={{
+          padding: "8px",
+          borderRadius: "5px",
+        }}
+      >
         <option value="low">Low (360p)</option>
         <option value="medium">Medium (480p)</option>
         <option value="hd720">HD 720p</option>
         <option value="hd1080">Full HD 1080p</option>
       </select>
 
-      <br /><br />
+      <br />
+      <br />
 
-      <select value={type} onChange={(e) => setType(e.target.value)}>
+      <select
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+        style={{
+          padding: "8px",
+          borderRadius: "5px",
+        }}
+      >
         <option value="video">Video</option>
         <option value="mp3">MP3 (Audio)</option>
       </select>
 
-      <br /><br />
+      <br />
+      <br />
 
-      <button onClick={handleDownload} disabled={loading}>
+      <button
+        onClick={handleDownload}
+        disabled={loading}
+        style={{
+          padding: "10px 20px",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
         {loading ? "Processing..." : "Download"}
       </button>
     </div>
