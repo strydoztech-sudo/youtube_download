@@ -15,7 +15,7 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/download", {
+      const response = await fetch("https://youtube-download-iczp.onrender.com/download", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -37,13 +37,13 @@ function App() {
       link.click();
 
     } catch (error) {
-  console.error(error);
-  alert("Error occurred ❌");
-}
+      console.error(error);
+      alert("Error occurred ❌");
+    }
 
-setLoading(false);
-};
-    
+    setLoading(false);
+  };
+
   return (
     <div style={{ textAlign: "center", marginTop: "80px" }}>
       <h1>YouTube Downloader 🎬</h1>
