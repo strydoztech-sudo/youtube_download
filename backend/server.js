@@ -40,7 +40,7 @@ app.post("/download", (req, res) => {
 ];
   }
 
-  const ytDlpPath = path.join(__dirname, "yt-dlp.exe");
+  const ytDlpPath = "yt-dlp";
 
   const process = spawn(ytDlpPath, args);
 
